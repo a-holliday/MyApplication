@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="question_capital_of_france">What is the capital of France?</string>
+    <string name="question_earth_is_flat">Is the Earth flat?</string>
+    <string name="question_moon_is_made_of_cheese">Is the Moon made of cheese?</string>
+    <string name="question_amazon_longest_river">Is the Amazon River the longest river in the world?</string>
+    <string name="question_himalayas_tallest_mountains">Are the Himalayas the tallest mountain range in the world?</string>
+    <string name="question_sahara_largest_desert">Is the Sahara Desert the largest desert in the world?</string>
+    <string name="question_pacific_largest_ocean">Is the Pacific Ocean the largest ocean in the world?</string>
+    <string name="question_australia_smallest_continent">Is Australia the smallest continent in the world?</string>
+    <string name="question_antarctica_no_permanent_population">Is Antarctica the only continent without a permanent human population?</string>
+    <string name="question_mount_everest_highest_mountain">Is Mount Everest the highest mountain on Earth?</string>
+    <string name="question_dead_sea_lowest_point">Is the Dead Sea the lowest point on Earth?</string>
+</resources>
