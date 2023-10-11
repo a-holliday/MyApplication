@@ -1,8 +1,12 @@
 package com.example.myapplication
 
+import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,11 +44,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.test.core.app.ApplicationProvider
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,74 +77,79 @@ fun MainUI( modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     var randomQuestion : Question? = null
 
-    getRandomQuestion()
+    scope.launch {
 
 
-
-    var userAnswer by rememberSaveable {mutableStateOf("")}
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    Column(modifier = modifier,
-        Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        if (randomQuestion != null) {
-            randomQuestion?.prompt?.let {
-                Text(
-                    text = it,
-                    modifier = modifier.align(alignment = Alignment.CenterHorizontally)
-                        .padding(25.dp),
-                    textAlign = TextAlign.Center
+        getRandomQuestion()
 
 
-                )
-            }
+        var userAnswer by rememberSaveable { mutableStateOf("") }
+        val snackbarHostState = remember { SnackbarHostState() }
 
-            TextField(
-                userAnswer,
-                onValueChange = { userAnswer = it },
-                modifier = Modifier.fillMaxWidth().padding(25.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone =
-                    {
-                        if (randomQuestion?.answer.equals(userAnswer)) {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = "That's right!"
-                                )
-                            }
-                        } else {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = "Not so!"
-                                )
+        Column(
+            modifier = modifier,
+            Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (randomQuestion != null) {
+                randomQuestion?.prompt?.let {
+                    Text(
+                        text = it,
+                        modifier = modifier.align(alignment = Alignment.CenterHorizontally)
+                            .padding(25.dp),
+                        textAlign = TextAlign.Center
+
+
+                    )
+                }
+
+                TextField(
+                    userAnswer,
+                    onValueChange = { userAnswer = it },
+                    modifier = Modifier.fillMaxWidth().padding(25.dp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone =
+                        {
+                            if (randomQuestion?.answer.equals(userAnswer)) {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "That's right!"
+                                    )
+                                }
+                            } else {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Not so!"
+                                    )
+                                }
                             }
                         }
-                    }
+                    )
                 )
-            )
 
 
-            Row(
-                modifier = modifier,
+                Row(
+                    modifier = modifier,
 
-                ) {
+                    ) {
+
+
+                }
+                Button(onClick = {
+                    getRandomQuestion()
+                }, shape = MaterialTheme.shapes.small) {
+                    Text(
+                        text = "Next"
+                    )
+                    Icon(Icons.Default.PlayArrow, contentDescription = "arrow button")
+                }
 
 
             }
-            Button(onClick = {
-                getRandomQuestion()
-            }, shape = MaterialTheme.shapes.small) {
-                Text(
-                    text = "Next"
-                )
-                Icon(Icons.Default.PlayArrow, contentDescription = "arrow button")
-            }
-
-
         }
     }
     SnackbarHost(
@@ -148,7 +158,8 @@ fun MainUI( modifier: Modifier = Modifier) {
     )
 }
 
-fun getRandomQuestion() :Question{
+suspend fun getRandomQuestion() :Question{
+    val context: Context = ApplicationProvider.getApplicationContext()
     val questionDao = QuestionDatabase.getDatabase(context).QuestionDAO()
     return questionDao.randomQuestion()
 }

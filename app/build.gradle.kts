@@ -51,6 +51,8 @@ android {
 
 dependencies {
 
+    implementation("androidx.test:core-ktx:1.5.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
     val room_version = "2.5.2"
 
     implementation("com.google.devtools.ksp:symbol-processing-api:1.9.10-1.0.13")
